@@ -31,16 +31,28 @@ describe('top-secrets routes', () => {
       password: 'password',
     });
 
-    console.log('signed up user :', user);
     const res = await request(app).post('/api/v1/users/sessions').send({
       username: 'Trev',
       password: 'password',
     });
-    console.log('user signing in :', res.body);
 
     expect(res.body).toEqual({
       message: 'Successfully signed in!',
       user,
+    });
+  });
+
+  it('should sign out a user by deleting the cookie', async () => {
+    await UserService.signUp({
+      username: 'Trev',
+      password: 'password',
+    });
+
+    const res = await request(app).delete('/api/v1/users/sessions');
+
+    expect(res.body).toEqual({
+      success: true,
+      message: 'Signed out successfully!',
     });
   });
 });
