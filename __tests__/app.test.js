@@ -55,4 +55,32 @@ describe('top-secrets routes', () => {
       message: 'Signed out successfully!',
     });
   });
+
+  it('should protect routes using the authenticate middleware', async () => {
+    const agent = request.agent(app);
+
+    await UserService.signUp({
+      username: 'Trev',
+      password: 'secret',
+    });
+
+    let res = await agent.get('/api/v1/secrets');
+    expect(res.status).toEqual(401);
+    console.log('response status: ', res.status);
+
+    await agent.post('/api/v1/users/sessions').send({
+      username: 'Trev',
+      password: 'secret',
+    });
+
+    res = await agent.get('/api/v1/secrets');
+
+    expect(res.body).toEqual([
+      {
+        id: '1',
+        title: 'Top Secret',
+        description: 'a super secret secret',
+      },
+    ]);
+  });
 });
