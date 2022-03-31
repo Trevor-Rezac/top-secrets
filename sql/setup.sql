@@ -14,4 +14,9 @@ CREATE TABLE secrets (
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
+
+INSERT INTO
+  secrets(title, description)
+VALUES
+  ('Top Secret', 'a super secret secret')

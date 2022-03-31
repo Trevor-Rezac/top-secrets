@@ -76,10 +76,35 @@ describe('top-secrets routes', () => {
 
     expect(res.body).toEqual([
       {
-        id: '1',
+        id: expect.any(String),
         title: 'Top Secret',
         description: 'a super secret secret',
       },
     ]);
+  });
+
+  it('should allow only authenticated users to post a new secret', async () => {
+    const agent = request.agent(app);
+
+    await UserService.signUp({
+      username: 'Trev',
+      password: 'secret',
+    });
+
+    await agent.post('/api/v1/users/sessions').send({
+      username: 'Trev',
+      password: 'secret',
+    });
+
+    const res = await agent.post('/api/v1/secrets').send({
+      title: 'Top Secret',
+      description: 'another super secret secret',
+    });
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      title: 'Top Secret',
+      description: 'another super secret secret',
+    });
   });
 });
