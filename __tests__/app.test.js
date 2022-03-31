@@ -66,7 +66,6 @@ describe('top-secrets routes', () => {
 
     let res = await agent.get('/api/v1/secrets');
     expect(res.status).toEqual(401);
-    console.log('response status: ', res.status);
 
     await agent.post('/api/v1/users/sessions').send({
       username: 'Trev',
